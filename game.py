@@ -15,9 +15,9 @@ d = ord("d")
 class Game(object):
     """Read the pygame event queue and call necessary methods."""
 
-    def __init__(self, display):
+    def __init__(self, main_display):
         """Return Null"""
-        self.display = display
+        self.display = main_display
         self.gamearea = pygame.Rect(0, 0, 600, 600)
         self.surface = pygame.Surface((600, 600))
         self.clock = pygame.time.Clock()
