@@ -7,6 +7,8 @@ import player
 
 
 FPS = []
+
+
 class Game(object):
     """Read the pygame event queue and call necessary methods."""
 
