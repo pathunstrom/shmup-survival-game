@@ -6,12 +6,7 @@ import sys
 import player
 
 
-w = ord("w")
-a = ord("a")
-s = ord("s")
-d = ord("d")
-
-
+FPS = []
 class Game(object):
     """Read the pygame event queue and call necessary methods."""
 
@@ -21,30 +16,35 @@ class Game(object):
         self.gamearea = pygame.Rect(0, 0, 600, 600)
         self.surface = pygame.Surface((600, 600))
         self.clock = pygame.time.Clock()
-        self.player = player.Player(self.gamearea.center)
+        self.player = player.Player(self.gamearea, self.surface)
         self.spawner = None
 
     @staticmethod
     def quit():
         """Quit pygame and exit."""
+        print("Average FPS: %f" % (sum(FPS) / len(FPS)))
         pygame.quit()
         sys.exit()
 
     def handler(self):
         """Handle the event queue. Return None"""
         for e in pygame.event.get():
+            if e.type == MOUSEBUTTONUP:
+                self.player.trigger(e.pos)
             if e.type == QUIT:
                 self.quit()
-
         return None
 
     def update(self):
         """Call game logic, redraw frame, return None"""
-        frames = self.clock.tick()
-        delta = float(frames) / float(1000.0000)
-        print delta
+        time = self.clock.tick()
+        #debug code to track FPS
+        FPS.append(self.clock.get_fps())
+        self.surface.fill((0, 0, 0))
+        # Store all location data as pixel location * 1000.
         self.handler()
-        self.display.blit(self.surface)
+        self.player.update(time)
+        self.display.blit(self.surface, (0, 0))
         pygame.display.update()
         return None
 
