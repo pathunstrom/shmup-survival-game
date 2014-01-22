@@ -15,8 +15,8 @@ class Player(object):
         self.rect = pygame.Rect(0, 0, 20, 20)
         self.color = (200, 110, 10)
         # Weapons and attacks
-        self.weapons = []
-        self.equipped = Weapon(area)
+        self.weapons = [Weapon(area)]
+        self.equipped = self.weapons[0]
         # Movement and Location
         self.x, self.y = area.centerx * 1000, area.centery * 1000
         self.speed = 90
@@ -88,9 +88,9 @@ class Bullet(object):
         self.speed = 400
 
     def move(self, time):
-        delta = time * self.speed
-        self.x += delta * self.run
-        self.y += delta * self.rise
+        distance = time * self.speed
+        self.x += distance * self.run
+        self.y += distance * self.rise
 
     def animate(self, surface):
         radius = 1
@@ -107,13 +107,17 @@ class Weapon(object):
 
     def __init__(self, area):
         self.shots = []
-        self.wait = 1000
+        self.wait = 500
+        self.timer = 500
         self.limit = area
 
     def shoot(self, origin, target):
-        self.shots.append(Bullet(origin, target))
+        if self.timer >= self.wait:
+            self.shots.append(Bullet(origin, target))
+            self.timer = 0
 
     def update(self, surface, time):
+        self.timer += time
         for s in self.shots:
             s.update(surface, time)
             if not self.limit.collidepoint(s.x / 1000, s.y / 1000):
